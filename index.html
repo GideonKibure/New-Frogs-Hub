@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>2nd Year, Semester II Mechanical Engineering Department Notes Portal</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-brand">
+    <h2><i class="fas fa-graduation-cap"></i> MUST Notes</h2>
+  </div>
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <ul class="nav-menu" id="navMenu">
+    <li class="nav-item">
+      <a href="#" id="homeLink" class="nav-link"><i class="fas fa-home"></i> Home</a>
+    </li>
+    <li class="nav-item">
+      <a href="#" id="aboutLink" class="nav-link"><i class="fas fa-info-circle"></i> About</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+  <div class="container" id="mainContainer">
+    <!-- Home Section -->
+    <div id="homeSection">
+      <div class="hero-section">
+        <h1 class="hero-title">Mechanical Engineering Department Notes Portal</h1>
+        <p class="hero-subtitle">2nd Year, Semester II</p>
+      </div>
+      
+      <div class="search-section">
+        <div class="search-wrapper">
+          <i class="fas fa-search"></i>
+          <input type="text" id="searchInput" placeholder="Search modules or notes...">
+        </div>
+      </div>
+      
+      <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-layer-group"></i> Available Modules</h2>
+      </div>
+      <div class="modules-grid" id="modulesGrid"></div>
+    </div>
+
+    <!-- Notes Section -->
+    <div id="notesSection" class="notes-section">
+      <button class="back-home-btn" id="backHomeBtn">
+        <i class="fas fa-arrow-left"></i> Back to Modules
+      </button>
+      <div class="section-header">
+        <h2 class="section-title" id="moduleTitleHeader"></h2>
+      </div>
+      <div id="notesGridContainer" class="notes-grid"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-content">
+    <p><i class="fas fa-microchip"></i> Developed for Mechanical Department Students</p>
+    <p class="footer-tagline">Engineering Excellence <i class="fas fa-crown" style="color: #d4af37;"></i></p>
+    <p class="footer-copyright">© 2026 2nd Mechanical Department Engineering Notes Portal — Smart Learning</p>
+  </div>
+</footer>
+
+<!-- Modal -->
+<div id="pdfModal" class="modal">
+  <div class="modal-container">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Document Viewer</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <iframe id="pdfFrame" src="about:blank" title="PDF Viewer"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
