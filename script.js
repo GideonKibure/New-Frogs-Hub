@@ -217,16 +217,16 @@ function showNotesForModule(moduleId) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// ==================== UPDATED openModal FUNCTION WITH IMAGE SUPPORT ====================
+// ==================== UPDATED openModal FUNCTION WITH ENHANCED IMAGE VIEWER ====================
 function openModal(fileUrl, title, fileType) {
   const modal = document.getElementById("pdfModal");
   const modalTitleSpan = document.getElementById("modalTitle");
   
   modalTitleSpan.innerText = title || "Document Viewer";
   
-  // Handle Image files
+  // Handle Image files with enhanced large viewer
   if (isImageFile(fileUrl, fileType)) {
-    showImageViewer(fileUrl, title);
+    showEnhancedImageViewer(fileUrl, title);
     modal.style.display = "flex";
     document.body.style.overflow = "hidden";
     return;
@@ -280,30 +280,87 @@ function openModal(fileUrl, title, fileType) {
   document.body.style.overflow = "hidden";
 }
 
-// New function to handle image viewing
-function showImageViewer(fileUrl, title) {
+// Enhanced Image Viewer with larger display and better centering
+function showEnhancedImageViewer(fileUrl, title) {
   const modalBody = document.querySelector(".modal-body");
   
   modalBody.innerHTML = `
-    <div style="background: white; height: 100%; display: flex; flex-direction: column;">
-      <div style="flex: 1; position: relative; background: #f5f5f5; display: flex; justify-content: center; align-items: center; overflow: auto; padding: 1rem;">
-        <img 
-          src="${fileUrl}" 
-          alt="${escapeHtml(title)}" 
-          style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);"
-          onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"200\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%23666\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"></rect><circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"></circle><polyline points=\"21 15 16 10 5 21\"></polyline></svg>'; this.style.opacity='0.5';"
-        >
+    <div style="background: #0a0a0a; height: 100%; display: flex; flex-direction: column;">
+      <div style="flex: 1; position: relative; display: flex; justify-content: center; align-items: center; overflow: auto; padding: 1.5rem; background: #0a0a0a;">
+        <div style="position: relative; max-width: 95%; max-height: 95%; display: flex; justify-content: center; align-items: center;">
+          <img 
+            src="${fileUrl}" 
+            alt="${escapeHtml(title)}" 
+            style="max-width: 100%; max-height: 85vh; width: auto; height: auto; object-fit: contain; border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); cursor: zoom-in; transition: transform 0.2s ease;"
+            class="zoomable-image"
+            onclick="toggleImageZoom(this)"
+            ondblclick="resetImageZoom(this)"
+          >
+        </div>
       </div>
-      <div style="padding: 0.8rem; text-align: center; background: #f5f5f5; border-top: 1px solid #ddd; display: flex; gap: 1rem; justify-content: center;">
-        <button id="imageDownloadBtn" class="btn" style="background: #0e2a3b; color: white;">
+      <div style="padding: 1rem; text-align: center; background: #1a1a1a; border-top: 1px solid #d4af37; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <button id="imageDownloadBtn" class="btn" style="background: #0e2a3b; color: white; padding: 0.6rem 1.2rem;">
           <i class="fas fa-download"></i> Download Image
         </button>
-        <button id="imageOpenNewBtn" class="btn" style="background: #1e2a3e; color: white;">
+        <button id="imageOpenNewBtn" class="btn" style="background: #1e2a3e; color: white; padding: 0.6rem 1.2rem;">
           <i class="fas fa-external-link-alt"></i> Open in New Tab
+        </button>
+        <button id="imageZoomInBtn" class="btn" style="background: #2a3a4e; color: white; padding: 0.6rem 1.2rem;">
+          <i class="fas fa-search-plus"></i> Zoom In
+        </button>
+        <button id="imageZoomOutBtn" class="btn" style="background: #2a3a4e; color: white; padding: 0.6rem 1.2rem;">
+          <i class="fas fa-search-minus"></i> Zoom Out
+        </button>
+        <button id="imageResetBtn" class="btn" style="background: #3a4a5e; color: white; padding: 0.6rem 1.2rem;">
+          <i class="fas fa-sync-alt"></i> Reset
         </button>
       </div>
     </div>
   `;
+  
+  // Add zoom functionality
+  setTimeout(() => {
+    const img = document.querySelector('.zoomable-image');
+    let currentZoom = 1;
+    
+    window.toggleImageZoom = function(element) {
+      if (element.style.transform === 'scale(2)') {
+        element.style.transform = 'scale(1)';
+        element.style.cursor = 'zoom-in';
+        currentZoom = 1;
+      } else {
+        element.style.transform = 'scale(2)';
+        element.style.cursor = 'zoom-out';
+        currentZoom = 2;
+      }
+    };
+    
+    window.resetImageZoom = function(element) {
+      element.style.transform = 'scale(1)';
+      element.style.cursor = 'zoom-in';
+      currentZoom = 1;
+    };
+    
+    document.getElementById("imageZoomInBtn")?.addEventListener("click", () => {
+      if (currentZoom < 3) {
+        currentZoom += 0.25;
+        img.style.transform = `scale(${currentZoom})`;
+      }
+    });
+    
+    document.getElementById("imageZoomOutBtn")?.addEventListener("click", () => {
+      if (currentZoom > 0.5) {
+        currentZoom -= 0.25;
+        img.style.transform = `scale(${currentZoom})`;
+      }
+    });
+    
+    document.getElementById("imageResetBtn")?.addEventListener("click", () => {
+      currentZoom = 1;
+      img.style.transform = 'scale(1)';
+      img.style.cursor = 'zoom-in';
+    });
+  }, 100);
   
   document.getElementById("imageDownloadBtn")?.addEventListener("click", () => {
     const extension = fileUrl.split('.').pop().split('?')[0];
