@@ -42,33 +42,38 @@ const localFiles = {
     { title: "SolidWorks Tutorials", type: "link", url: "https://youtu.be/20etLaFJNSc?si=ez1BcWhenrvy7Gfn" }
   ],
   transducer: [
-    { title: "Transducers & Actuators", type: "pptx", url: "Transducers/Capacitive Transducers.ppt" },
-    { title: "Transducers & Actuators", type: "pptx", url: "Transducers/Hall effect Sensor.ppt" },
-    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
-    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
-    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
-    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
-    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
-    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
-    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
-    { title: "Sensor Technology", type: "pdf", url: "notes/sensors.pptx" },
-    { title: "Sensor Technology", type: "pdf", url: "notes/sensors.pptx" }
+    { title: "Capacitive Transducers", type: "pptx", url: "Transducers/Capacitive Transducers.ppt" },
+    { title: "Hall Effect Sensors", type: "pptx", url: "Transducers/Hall effect Sensor.ppt" },
+    { title: "Inductive Transducers", type: "pptx", url: "Transducers/Inductive Transducers.ppt" },
+    { title: "Introduction to Transducers", type: "pptx", url: "Transducers/Introduction to Transducers.pptx" },
+    { title: "Photoelectric Transducers", type: "pptx", url: "Transducers/Photo electric Transducer - Copy.ppt" },
+    { title: "Piezoelectric Transducers", type: "pptx", url: "Transducers/Piezoelectric Transducers.ppt" },
+    { title: "Proximity Sensors", type: "pptx", url: "Transducers/Proximity Sensors.ppt" },
+    { title: "Resistance transducer", type: "pptx", url: "Transducers/Resistance Transducers.ppt" },
+    { title: "Thermistors and Resistance Thermometers", type: "pptx", url: "Transducers/Themistors and Resistance thermometers.ppt" },
+    { title: "Thermoelectric Transducers", type: "pptx", url: "Transducers/Thermo electric Transducer.ppt" },
+    { title: "Transducer-engineering-by-nagaraj", type: "pdf", url: "Transducers/Transducer-engineering-by-nagaraj.pdf" },
+    { title: "Transducer-engineering-dr-s-renganathan", type: "pdf", url: "Transducers/Transducer-engineering-dr-s-renganathan.pdf" }
   ],
   eca: [
-    { title: "Circuit Analysis", type: "pdf", url: "notes/circuit_analysis.pdf" },
-    { title: "Network Theorems", type: "pptx", url: "notes/network_theorems.pptx" }
+    { title: "Lecture 3_Transistor Bias Circuits", type: "pdf", url: "Circuit Analysis/Lecture 3 - Transistor Bias Circuits.pdf" },
+    { title: "Lecture 1 & 2", type: "pptx", url: "Circuit Analysis/L 1& 2.ppt" },
+    { title: "Lecture 2", type: "pptx", url: "Circuit Analysis/LECTURE TWO.ppt" },
+    { title: "Lecrure 3", type: "pptx", url: "Circuit Analysis/LECTURE THREE.pptx" }
   ],
   ie: [
-    { title: "Industrial Electronics", type: "pdf", url: "notes/industrial_electronics.pdf" },
-    { title: "Power Electronics", type: "pptx", url: "notes/power_electronics.pptx" }
+    { title: "Waiting for Notes...", type: "pdf", url: "" }
   ],
   math: [
-    { title: "Applied Mathematics IV", type: "pdf", url: "notes/applied_math.pdf" },
-    { title: "Laplace Transforms", type: "pptx", url: "notes/laplace_transforms.pptx" }
+    { title: "Waiting for Notes...", type: "pdf", url: "" }
   ],
   machine: [
-    { title: "Machine Element Design", type: "pdf", url: "notes/machine_design.pdf" },
-    { title: "Mechanical Components", type: "pptx", url: "notes/mechanical_components.pptx" }
+    { title: "Lecture 1_Introduction to machine Element and Design", type: "pptx", url: "Machine Element/LECTURE 1. INTRODUCTION TO MACHINE ELEMENT AND DESIGN.pptx" },
+    { title: "Machine and Mechanisms", type: "pptx", url: "Machine Element/MACHINE AND MECHANISMS (1).pptx" },
+    { title: "Machine Elements and Design Contents", type: "docx", url: "Machine Element/MACHINE ELEMENTS AND DESIGN CONTETS - ME 62122.docx" },
+    { title: "Machine Design Blueprint", type: "pptx", url: "Machine Element/Machine_Design_Blueprint.pptx" },
+    { title: "Machine Design Framework", type: "pptx", url: "Machine Element/Machine_Design_Framework.pptx" },
+    { title: "Stress in Composite Bars", type: "pptx", url: "Machine Element/STRESS IN COMPOSITE BARS.pptx" }
   ]
 };
 
@@ -196,7 +201,7 @@ function showNotesForModule(moduleId) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// ==================== UPDATED openModal FUNCTION WITH EXTERNAL LINK SUPPORT ====================
+// ==================== UPDATED openModal FUNCTION WITH DOCX SUPPORT ====================
 function openModal(fileUrl, title, fileType) {
   const modal = document.getElementById("pdfModal");
   const modalTitleSpan = document.getElementById("modalTitle");
@@ -213,6 +218,18 @@ function openModal(fileUrl, title, fileType) {
   // Handle External Links (YouTube, websites, etc.)
   if (isExternalLink) {
     showExternalContent(fileUrl, title);
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    return;
+  }
+  
+  // Handle DOCX files - with mobile support
+  if (fileType === 'docx' || fileUrl.toLowerCase().includes('.docx')) {
+    if (isMobileDevice()) {
+      showMobileDocxOptions(fileUrl, title);
+    } else {
+      showDocxMessage(fileUrl, title);
+    }
     modal.style.display = "flex";
     document.body.style.overflow = "hidden";
     return;
@@ -237,6 +254,84 @@ function openModal(fileUrl, title, fileType) {
   
   modal.style.display = "flex";
   document.body.style.overflow = "hidden";
+}
+
+// New function to handle DOCX files on mobile
+function showMobileDocxOptions(fileUrl, title) {
+  const modalBody = document.querySelector(".modal-body");
+  
+  modalBody.innerHTML = `
+    <div style="padding: 1rem; background: white; height: 100%; overflow-y: auto;">
+      <div style="text-align: center; padding: 2rem 1rem;">
+        <i class="fas fa-file-word" style="font-size: 4rem; color: #2b5797; margin-bottom: 1rem; display: block;"></i>
+        <h3 style="color: #0a1a2f; margin-bottom: 1rem;">${escapeHtml(title)}</h3>
+        <p style="color: #666; margin-bottom: 2rem;">This is a Microsoft Word document (DOCX).</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 300px; margin: 0 auto;">
+          <button id="mobileDocxDownloadBtn" class="btn" style="background: #0e2a3b; color: white; padding: 0.8rem; width: 100%;">
+            <i class="fas fa-download"></i> Download DOCX
+          </button>
+          <button id="mobileDocxViewBtn" class="btn" style="background: #1e2a3e; color: white; padding: 0.8rem; width: 100%;">
+            <i class="fas fa-external-link-alt"></i> Open in New Tab
+          </button>
+          <button id="mobileDocxGoogleBtn" class="btn" style="background: #2a3a4e; color: white; padding: 0.8rem; width: 100%;">
+            <i class="fab fa-google"></i> Open with Google Docs
+          </button>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">
+          <p style="font-size: 0.8rem; color: #666; margin: 0;">
+            <i class="fas fa-info-circle"></i> Tip: Download the DOCX file and open with Microsoft Word, Google Docs, or your preferred document viewer.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add event listeners for mobile DOCX options
+  document.getElementById("mobileDocxDownloadBtn")?.addEventListener("click", () => {
+    downloadFile(fileUrl, `${title}.docx`);
+  });
+  
+  document.getElementById("mobileDocxViewBtn")?.addEventListener("click", () => {
+    window.open(fileUrl, '_blank');
+  });
+  
+  document.getElementById("mobileDocxGoogleBtn")?.addEventListener("click", () => {
+    const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + '/' + fileUrl)}&embedded=true`;
+    window.open(googleDocsUrl, '_blank');
+  });
+}
+
+// Show DOCX message for desktop
+function showDocxMessage(fileUrl, title) {
+  const modalBody = document.querySelector(".modal-body");
+  modalBody.innerHTML = `
+    <div style="padding: 2rem; background: white; height: 100%; display: flex; justify-content: center; align-items: center;">
+      <div style="text-align: center; max-width: 400px;">
+        <i class="fas fa-file-word" style="font-size: 4rem; color: #2b5797; margin-bottom: 1rem;"></i>
+        <h3 style="color: #0a1a2f; margin-bottom: 1rem;">Microsoft Word Document</h3>
+        <p style="color: #666; margin-bottom: 2rem;">This is a DOCX file. Click below to download and view it with Microsoft Word or Google Docs.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+          <button id="desktopDocxDownloadBtn" class="btn" style="background: #0e2a3b; color: white; padding: 0.8rem 1.5rem;">
+            <i class="fas fa-download"></i> Download
+          </button>
+          <button id="desktopDocxGoogleBtn" class="btn" style="background: #1e2a3e; color: white; padding: 0.8rem 1.5rem;">
+            <i class="fab fa-google"></i> Open with Google Docs
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById("desktopDocxDownloadBtn")?.addEventListener("click", () => {
+    downloadFile(fileUrl, `${title}.docx`);
+  });
+  
+  document.getElementById("desktopDocxGoogleBtn")?.addEventListener("click", () => {
+    const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + '/' + fileUrl)}&embedded=true`;
+    window.open(googleDocsUrl, '_blank');
+  });
 }
 
 // New function to handle external content (YouTube, websites)
@@ -697,7 +792,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   document.getElementById("aboutLink").addEventListener("click", (e) => {
     e.preventDefault();
-    alert("2ND Year Mechanical Department Engineering Notes Portal\n\nAccess all course materials in one place.\n\nFeatures:\n• 10 Engineering Modules\n• Search modules and notes\n• PDF and PowerPoint file support\n• Responsive design for all devices\n• Interactive animated background\n\nDeveloped for 2nd Year Mechanical Engineering Department Students");
+    alert("2ND Year Mechanical Department Engineering Notes Portal\n\nAccess all course materials in one place.\n\nFeatures:\n• 10 Engineering Modules\n• Search modules and notes\n• PDF, PowerPoint, and DOCX file support\n• Responsive design for all devices\n• Interactive animated background\n\nDeveloped for 2nd Year Mechanical Engineering Department Students");
   });
   
   initParticles();
