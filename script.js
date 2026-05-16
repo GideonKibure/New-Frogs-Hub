@@ -16,16 +16,6 @@ const modulesData = [
 
 // ==================== LOCAL FILE PATHS ====================
 // UPDATE THESE PATHS to point to your actual local files
-// Place your PDF and PPT files in a folder named "notes" in the same directory as your HTML file
-// Example file structure:
-// - index.html
-// - style.css
-// - script.js
-// - notes/
-//   - fluid_mechanics.pdf
-//   - plc_basics.pptx
-//   - etc.
-
 const localFiles = {
   fluid: [
     { title: "Fluid Mechanics Notes", type: "pdf", url: "Fluid Mechanics/TUTORIALS-1 (Based on the Topic of Fluid Properties).pdf" },
@@ -69,36 +59,26 @@ const localFiles = {
   ]
 };
 
-// Notes database (using local files, no descriptions)
+// Notes database
 const notesDatabase = {};
 
 // Build notes database from localFiles
 for (let moduleId in localFiles) {
   notesDatabase[moduleId] = localFiles[moduleId].map(file => ({
     title: file.title,
-    desc: "", // Empty description as requested
+    desc: "",
     type: file.type,
     pdfUrl: file.url
   }));
 }
 
-// Ensure every module has notes (fallback for any missing modules)
+// Ensure every module has notes
 for (let mod of modulesData) {
   if (!notesDatabase[mod.id] || notesDatabase[mod.id].length === 0) {
     notesDatabase[mod.id] = [
       { title: `${mod.title} Notes`, desc: "", type: "pdf", pdfUrl: `notes/${mod.id}_notes.pdf` }
     ];
   }
-}
-
-// Helper function to check if file is a PDF (for preview)
-function isPdfFile(url) {
-  return url.toLowerCase().endsWith('.pdf');
-}
-
-// Helper function to check if file is a PPT/PPTX
-function isPptFile(url) {
-  return url.toLowerCase().endsWith('.ppt') || url.toLowerCase().endsWith('.pptx');
 }
 
 // ==================== DOM ELEMENTS ====================
@@ -113,6 +93,11 @@ function escapeHtml(str) {
     if (m === '>') return '&gt;';
     return m;
   });
+}
+
+// Detect mobile device
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
 // Render Modules
@@ -198,103 +183,147 @@ function showNotesForModule(moduleId) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Modal Functions with PPT support
+// Enhanced Modal Functions for Mobile PDF viewing
 function openModal(fileUrl, title, fileType) {
   const modal = document.getElementById("pdfModal");
-  const iframe = document.getElementById("pdfFrame");
   const modalTitleSpan = document.getElementById("modalTitle");
   
   modalTitleSpan.innerText = title || "Document Viewer";
   
-  // For PPT/PPTX files, show a message and download instead
+  // Handle PPT/PPTX files
   if (fileType === 'pptx' || fileType === 'ppt' || fileUrl.toLowerCase().includes('.pptx') || fileUrl.toLowerCase().includes('.ppt')) {
-    modalTitleSpan.innerText = title + " (PowerPoint File)";
-    // Display a message in the iframe for PPT files
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    iframeDoc.open();
-    iframeDoc.write(`
-      <!DOCTYPE html>
-      <html>
-      <head><style>
-        body {
-          font-family: 'Inter', sans-serif;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          margin: 0;
-          background: linear-gradient(135deg, #0a1a2f, #07121f);
-          color: white;
-          text-align: center;
-        }
-        .message-container {
-          padding: 2rem;
-        }
-        i {
-          font-size: 4rem;
-          color: #d4af37;
-          margin-bottom: 1rem;
-        }
-        h2 {
-          margin-bottom: 1rem;
-        }
-        p {
-          margin-bottom: 1.5rem;
-          color: #b9c7d9;
-        }
-        .download-btn {
-          background: linear-gradient(135deg, #0e2a3b, #1a3a4f);
-          color: white;
-          border: 1px solid #d4af37;
-          padding: 0.8rem 1.5rem;
-          border-radius: 40px;
-          cursor: pointer;
-          font-size: 1rem;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        .download-btn:hover {
-          background: linear-gradient(135deg, #1a3a4f, #2a4a62);
-        }
-      </style>
-      </head>
-      <body>
-        <div class="message-container">
-          <i class="fas fa-file-powerpoint"></i>
-          <h2>PowerPoint Presentation</h2>
-          <p>This is a PowerPoint file. Click the button below to download and view it.</p>
-          <button class="download-btn" onclick="parent.downloadFile('${fileUrl}', '${title}.pptx')">
-            <i class="fas fa-download"></i> Download PowerPoint
-          </button>
-        </div>
-      </body>
-      </html>
-    `);
-    iframeDoc.close();
+    showPowerPointMessage(fileUrl, title);
     modal.style.display = "flex";
     document.body.style.overflow = "hidden";
     return;
   }
   
-  // For PDF files, display normally
-  iframe.src = fileUrl;
+  // Handle PDF files - with mobile compatibility
+  if (isMobileDevice()) {
+    // On mobile devices, offer better options
+    showMobilePdfOptions(fileUrl, title);
+  } else {
+    // On desktop, use iframe viewer
+    showPdfInIframe(fileUrl, title);
+  }
+  
   modal.style.display = "flex";
   document.body.style.overflow = "hidden";
 }
 
+// Show PDF in iframe (desktop)
+function showPdfInIframe(fileUrl, title) {
+  const modal = document.getElementById("pdfModal");
+  const modalBody = document.querySelector(".modal-body");
+  const existingIframe = document.getElementById("pdfFrame");
+  
+  if (existingIframe) {
+    existingIframe.src = fileUrl;
+  } else {
+    modalBody.innerHTML = `<iframe id="pdfFrame" src="${fileUrl}" title="${title}" style="width:100%; height:100%; border:none;"></iframe>`;
+  }
+}
+
+// Show mobile-friendly PDF options
+function showMobilePdfOptions(fileUrl, title) {
+  const modalBody = document.querySelector(".modal-body");
+  const existingIframe = document.getElementById("pdfFrame");
+  
+  // Create mobile-friendly viewer with multiple options
+  modalBody.innerHTML = `
+    <div style="padding: 1rem; background: white; height: 100%; overflow-y: auto;">
+      <div style="text-align: center; padding: 2rem 1rem;">
+        <i class="fas fa-file-pdf" style="font-size: 4rem; color: #d4af37; margin-bottom: 1rem; display: block;"></i>
+        <h3 style="color: #0a1a2f; margin-bottom: 1rem;">${escapeHtml(title)}</h3>
+        <p style="color: #666; margin-bottom: 2rem;">Your mobile browser may have limited PDF preview capabilities.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 300px; margin: 0 auto;">
+          <button id="mobileDownloadBtn" class="btn" style="background: #0e2a3b; color: white; padding: 0.8rem; width: 100%;">
+            <i class="fas fa-download"></i> Download PDF
+          </button>
+          <button id="mobileOpenNewBtn" class="btn" style="background: #1e2a3e; color: white; padding: 0.8rem; width: 100%;">
+            <i class="fas fa-external-link-alt"></i> Open in New Tab
+          </button>
+          <button id="mobileGoogleViewerBtn" class="btn" style="background: #2a3a4e; color: white; padding: 0.8rem; width: 100%;">
+            <i class="fab fa-google"></i> Open with Google Docs
+          </button>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">
+          <p style="font-size: 0.8rem; color: #666; margin: 0;">
+            <i class="fas fa-info-circle"></i> Tip: Download the PDF and open with your device's PDF reader for the best experience.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add event listeners for mobile options
+  document.getElementById("mobileDownloadBtn")?.addEventListener("click", () => {
+    downloadFile(fileUrl, `${title}.pdf`);
+  });
+  
+  document.getElementById("mobileOpenNewBtn")?.addEventListener("click", () => {
+    window.open(fileUrl, '_blank');
+  });
+  
+  document.getElementById("mobileGoogleViewerBtn")?.addEventListener("click", () => {
+    const googleViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + '/' + fileUrl)}&embedded=true`;
+    window.open(googleViewerUrl, '_blank');
+  });
+}
+
+// Show PowerPoint message
+function showPowerPointMessage(fileUrl, title) {
+  const modalBody = document.querySelector(".modal-body");
+  modalBody.innerHTML = `
+    <div style="padding: 2rem; background: white; height: 100%; display: flex; justify-content: center; align-items: center;">
+      <div style="text-align: center; max-width: 400px;">
+        <i class="fas fa-file-powerpoint" style="font-size: 4rem; color: #d4af37; margin-bottom: 1rem;"></i>
+        <h3 style="color: #0a1a2f; margin-bottom: 1rem;">PowerPoint Presentation</h3>
+        <p style="color: #666; margin-bottom: 2rem;">This is a PowerPoint file. Click below to download and view it.</p>
+        <button id="pptDownloadBtn" class="btn" style="background: #0e2a3b; color: white; padding: 0.8rem 1.5rem;">
+          <i class="fas fa-download"></i> Download PowerPoint
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById("pptDownloadBtn")?.addEventListener("click", () => {
+    downloadFile(fileUrl, `${title}.pptx`);
+  });
+}
+
 function closeModal() {
   const modal = document.getElementById("pdfModal");
-  const iframe = document.getElementById("pdfFrame");
+  const modalBody = document.querySelector(".modal-body");
   modal.style.display = "none";
-  iframe.src = "about:blank";
+  
+  // Reset modal body to default iframe view
+  modalBody.innerHTML = `<iframe id="pdfFrame" src="about:blank" title="PDF Viewer" style="width:100%; height:100%; border:none;"></iframe>`;
   document.body.style.overflow = "auto";
 }
 
-// Download File - supports both PDF and PPT
+// Enhanced Download File function with better error handling
 function downloadFile(url, filename) {
-  // For local files, use fetch or direct download
+  // Create a loading indicator
+  const loadingToast = document.createElement('div');
+  loadingToast.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 40px;
+    z-index: 10000;
+    font-size: 14px;
+    pointer-events: none;
+  `;
+  loadingToast.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+  document.body.appendChild(loadingToast);
+  
   fetch(url)
     .then(res => {
       if (!res.ok) {
@@ -304,25 +333,37 @@ function downloadFile(url, filename) {
     })
     .then(blob => {
       const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
+      const objectUrl = URL.createObjectURL(blob);
+      link.href = objectUrl;
       link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
+      URL.revokeObjectURL(objectUrl);
+      
+      loadingToast.innerHTML = '<i class="fas fa-check"></i> Download complete!';
+      setTimeout(() => {
+        loadingToast.remove();
+      }, 2000);
     })
-    .catch(() => {
-      // Fallback for local files or if fetch fails
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+    .catch((error) => {
+      console.error('Download error:', error);
+      loadingToast.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Download failed. Trying alternative method...';
+      
+      // Fallback: direct link
+      setTimeout(() => {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        loadingToast.remove();
+      }, 1000);
     });
 }
 
-// Make downloadFile available globally for the PPT modal
+// Make downloadFile available globally
 window.downloadFile = downloadFile;
 
 // Navigation
