@@ -11,7 +11,8 @@ const modulesData = [
   { id: "eca", title: "Electrical Circuit Analysis", code: "EE 6274", description: "" },
   { id: "ie", title: "Industrial Electronics", code: "EE 6275", description: "" },
   { id: "math", title: "Applied Mathematics IV", code: "MS 6263", description: "" },
-  { id: "machine", title: "Machine Element and Design", code: "MS 6212", description: "" }
+  { id: "machine", title: "Machine Element and Design", code: "MS 6212", description: "" },
+  { id: "be", title: "Basic Electronics", code: "EE 6271", description: "" }
 ];
 
 // ==================== LOCAL FILE PATHS ====================
@@ -65,7 +66,10 @@ const localFiles = {
     { title: "Waiting for Notes...", type: "pdf", url: "" }
   ],
   math: [
-    { title: "Waiting for Notes...", type: "pdf", url: "" }
+    { title: "Mathematics Notes - Page 1", type: "image", url: "Applied Mathematics IV/one.jpeg" },
+    { title: "Mathematics Notes - Page 2", type: "image", url: "Applied Mathematics IV/two.jpeg" },
+    { title: "Mathematics Notes - Page 3", type: "image", url: "Applied Mathematics IV/two-b.jpeg" },
+    { title: "Mathematics Notes - Page 4", type: "image", url: "Applied Mathematics IV/three.jpeg" }
   ],
   machine: [
     { title: "Lecture 1_Introduction to machine Element and Design", type: "pptx", url: "Machine Element/LECTURE 1. INTRODUCTION TO MACHINE ELEMENT AND DESIGN.pptx" },
@@ -74,6 +78,11 @@ const localFiles = {
     { title: "Machine Design Blueprint", type: "pptx", url: "Machine Element/Machine_Design_Blueprint.pptx" },
     { title: "Machine Design Framework", type: "pptx", url: "Machine Element/Machine_Design_Framework.pptx" },
     { title: "Stress in Composite Bars", type: "pptx", url: "Machine Element/STRESS IN COMPOSITE BARS.pptx" }
+  ],
+  be: [
+    { title: "Lecture 1a_Semiconductor and Applications", type: "pdf", url: "Basic Elecronics/Lecture 1a - Semiconductor Diode and Applications.pdf" },
+    { title: "Lecture 1b_Semiconductor and Applications", type: "pdf", url: "Basic Elecronics/Lecture 1b - Semiconductor Diode and Applications.pdf" },
+    { title: "Lecture 2_Bipolar Junction Transistor", type: "pdf", url: "Basic Elecronics/Lecture 2 - Bipolar Junction Transistor.pdf" }
   ]
 };
 
@@ -86,7 +95,7 @@ for (let moduleId in localFiles) {
     title: file.title,
     desc: "",
     type: file.type,
-    pdfUrl: file.url
+    url: file.url
   }));
 }
 
@@ -94,7 +103,7 @@ for (let moduleId in localFiles) {
 for (let mod of modulesData) {
   if (!notesDatabase[mod.id] || notesDatabase[mod.id].length === 0) {
     notesDatabase[mod.id] = [
-      { title: `${mod.title} Notes`, desc: "", type: "pdf", pdfUrl: `notes/${mod.id}_notes.pdf` }
+      { title: `${mod.title} Notes`, desc: "", type: "pdf", url: `notes/${mod.id}_notes.pdf` }
     ];
   }
 }
@@ -116,6 +125,13 @@ function escapeHtml(str) {
 // Detect mobile device
 function isMobileDevice() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Check if file is an image
+function isImageFile(fileUrl, fileType) {
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
+  const hasImageExt = imageExtensions.some(ext => fileUrl.toLowerCase().endsWith(ext));
+  return fileType === 'image' || hasImageExt;
 }
 
 // Render Modules
@@ -173,8 +189,8 @@ function showNotesForModule(moduleId) {
     <div class="note-card" data-noteidx="${idx}">
       <div class="note-title">${escapeHtml(note.title)}</div>
       <div class="button-group">
-        <button class="btn btn-view" data-url="${note.pdfUrl}" data-title="${escapeHtml(note.title)}" data-type="${note.type}"><i class="fas fa-eye"></i> View</button>
-        <button class="btn btn-download" data-url="${note.pdfUrl}" data-filename="${moduleObj.title}_${note.title}.${note.type}"><i class="fas fa-download"></i> Download</button>
+        <button class="btn btn-view" data-url="${note.url}" data-title="${escapeHtml(note.title)}" data-type="${note.type}"><i class="fas fa-eye"></i> View</button>
+        <button class="btn btn-download" data-url="${note.url}" data-filename="${moduleObj.title}_${note.title}.${note.type === 'image' ? note.url.split('.').pop() : note.type}"><i class="fas fa-download"></i> Download</button>
       </div>
     </div>
   `).join("");
@@ -201,12 +217,20 @@ function showNotesForModule(moduleId) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// ==================== UPDATED openModal FUNCTION WITH DOCX SUPPORT ====================
+// ==================== UPDATED openModal FUNCTION WITH IMAGE SUPPORT ====================
 function openModal(fileUrl, title, fileType) {
   const modal = document.getElementById("pdfModal");
   const modalTitleSpan = document.getElementById("modalTitle");
   
   modalTitleSpan.innerText = title || "Document Viewer";
+  
+  // Handle Image files
+  if (isImageFile(fileUrl, fileType)) {
+    showImageViewer(fileUrl, title);
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    return;
+  }
   
   // Check if this is an external link (type 'link' or URL starting with http:// or https://)
   const isExternalLink = fileType === 'link' || 
@@ -254,6 +278,41 @@ function openModal(fileUrl, title, fileType) {
   
   modal.style.display = "flex";
   document.body.style.overflow = "hidden";
+}
+
+// New function to handle image viewing
+function showImageViewer(fileUrl, title) {
+  const modalBody = document.querySelector(".modal-body");
+  
+  modalBody.innerHTML = `
+    <div style="background: white; height: 100%; display: flex; flex-direction: column;">
+      <div style="flex: 1; position: relative; background: #f5f5f5; display: flex; justify-content: center; align-items: center; overflow: auto; padding: 1rem;">
+        <img 
+          src="${fileUrl}" 
+          alt="${escapeHtml(title)}" 
+          style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);"
+          onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"200\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%23666\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"></rect><circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"></circle><polyline points=\"21 15 16 10 5 21\"></polyline></svg>'; this.style.opacity='0.5';"
+        >
+      </div>
+      <div style="padding: 0.8rem; text-align: center; background: #f5f5f5; border-top: 1px solid #ddd; display: flex; gap: 1rem; justify-content: center;">
+        <button id="imageDownloadBtn" class="btn" style="background: #0e2a3b; color: white;">
+          <i class="fas fa-download"></i> Download Image
+        </button>
+        <button id="imageOpenNewBtn" class="btn" style="background: #1e2a3e; color: white;">
+          <i class="fas fa-external-link-alt"></i> Open in New Tab
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById("imageDownloadBtn")?.addEventListener("click", () => {
+    const extension = fileUrl.split('.').pop().split('?')[0];
+    downloadFile(fileUrl, `${title}.${extension}`);
+  });
+  
+  document.getElementById("imageOpenNewBtn")?.addEventListener("click", () => {
+    window.open(fileUrl, '_blank');
+  });
 }
 
 // New function to handle DOCX files on mobile
@@ -391,7 +450,6 @@ function showExternalContent(fileUrl, title) {
 
 // Show PDF in iframe (desktop)
 function showPdfInIframe(fileUrl, title) {
-  const modal = document.getElementById("pdfModal");
   const modalBody = document.querySelector(".modal-body");
   const existingIframe = document.getElementById("pdfFrame");
   
@@ -576,8 +634,8 @@ function handleSearch() {
       <div class="note-card">
         <div class="note-title">${escapeHtml(note.title)}</div>
         <div class="button-group">
-          <button class="btn btn-view" data-url="${note.pdfUrl}" data-title="${escapeHtml(note.title)}" data-type="${note.type}"><i class="fas fa-eye"></i> View</button>
-          <button class="btn btn-download" data-url="${note.pdfUrl}" data-filename="${moduleObj ? moduleObj.title : 'note'}_${note.title}.${note.type}"><i class="fas fa-download"></i> Download</button>
+          <button class="btn btn-view" data-url="${note.url}" data-title="${escapeHtml(note.title)}" data-type="${note.type}"><i class="fas fa-eye"></i> View</button>
+          <button class="btn btn-download" data-url="${note.url}" data-filename="${moduleObj ? moduleObj.title : 'note'}_${note.title}.${note.type === 'image' ? note.url.split('.').pop() : note.type}"><i class="fas fa-download"></i> Download</button>
         </div>
       </div>
     `).join("");
@@ -792,7 +850,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   document.getElementById("aboutLink").addEventListener("click", (e) => {
     e.preventDefault();
-    alert("2ND Year Mechanical Department Engineering Notes Portal\n\nAccess all course materials in one place.\n\nFeatures:\n• 10 Engineering Modules\n• Search modules and notes\n• PDF, PowerPoint, and DOCX file support\n• Responsive design for all devices\n• Interactive animated background\n\nDeveloped for 2nd Year Mechanical Engineering Department Students");
+    alert("2ND Year Mechanical Department Engineering Notes Portal\n\nAccess all course materials in one place.\n\nFeatures:\n• 11 Engineering Modules\n• Search modules and notes\n• PDF, PowerPoint, DOCX, and IMAGE file support\n• Responsive design for all devices\n• Interactive animated background\n\nDeveloped for 2nd Year Mechanical Engineering Department Students");
   });
   
   initParticles();
