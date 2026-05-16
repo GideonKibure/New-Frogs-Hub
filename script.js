@@ -6,7 +6,7 @@ const modulesData = [
   { id: "plc", title: "Programmable Logical Controller I (PLC)", code: "ME 6215", description: "" },
   { id: "electro", title: "Electro-Pneumatic", code: "ME 6216", description: "" },
   { id: "autoElec", title: "Auto Electrical System", code: "ME 6210", description: "" },
-  { id: "cad", title: "Solid Works", code: "ME 6209", description: "" },
+  { id: "solidworks", title: "Solid Works", code: "ME 6209", description: "" },
   { id: "transducer", title: "Transducers and Actuator Technology", code: "ME 6217", description: "" },
   { id: "eca", title: "Electrical Circuit Analysis", code: "EE 6274", description: "" },
   { id: "ie", title: "Industrial Electronics", code: "EE 6275", description: "" },
@@ -18,28 +18,41 @@ const modulesData = [
 // UPDATE THESE PATHS to point to your actual local files
 const localFiles = {
   fluid: [
-    { title: "Fluid Mechanics Notes", type: "pdf", url: "Fluid Mechanics/TUTORIALS-1 (Based on the Topic of Fluid Properties).pdf" },
-    { title: "Fluid Dynamics", type: "pdf", url: "notes/fluid_dynamics.pdf" }
+    { title: "Tutorials 1 (Fluid Properties)", type: "pdf", url: "Fluid Mechanics/TUTORIALS-1 (Based on the Topic of Fluid Properties).pdf" },
+    { title: "Tutorials 1 (Solutions)", type: "pdf", url: "Fluid Mechanics/TUTORIALS-1 Solutions.pdf" }
   ],
   plc: [
-    { title: "PLC Programming Basics", type: "pdf", url: "notes/plc_basics.pdf" },
-    { title: "Advanced PLC", type: "pptx", url: "notes/advanced_plc.pptx" }
+    { title: "Lecture 1_PLC", type: "pptx", url: "PLC/Lecture 1_PLC I.pptx" },
+    { title: "Lecture 2_PLC Input and Output", type: "pptx", url: "PLC/Lecture 2_PLC Input and outputs.pptx" },
+    { title: "Lecture 3_Ladder Programming", type: "pptx", url: "PLC/Lecture 3- Ladder Programming.pptx" },
+    { title: "Lecture 3_PLC Programming", type: "pptx", url: "PLC/Lecture 3- PLC Programming.pptx" },
+    { title: "PLC Fundamentals", type: "pptx", url: "PLC/PLC Fundamentals.pptx" },
+    { title: "PLC INPUT-OUTPUTS", type: "pptx", url: "PLC/PLC INPUT-OUTPUTS.pptx" }
   ],
   electro: [
-    { title: "Electro-Pneumatic Systems", type: "pdf", url: "notes/electro_pneumatic.pdf" },
-    { title: "Valve Control", type: "pptx", url: "notes/valve_control.pptx" }
+    { title: "Lecture 2_Introduction to Electro-Pneumatic Systems", type: "pptx", url: "Electro Pneumatic/Lecture 2; Introduction to Electro-pneumatics 2.pptx" },
+    { title: "Lecture 3_Direct and Indirect Control in Electro-pneumatic", type: "pptx", url: "Electro Pneumatic/Lecture 3; Direct and indirect control in Electro-pneumatic - Copy [Autosaved].pptx" }
   ],
   autoElec: [
-    { title: "Automotive Electrical Systems", type: "pdf", url: "notes/auto_electrical.pdf" },
-    { title: "Wiring Diagrams", type: "pptx", url: "notes/wiring_diagrams.pptx" }
+    { title: "Autoelectric", type: "pptx", url: "Auto Elecrical System/autoelectric.pptx" },
+    { title: "Battery", type: "pptx", url: "Auto Elecrical System/Battery.pptx" },
+    { title: "Starting", type: "pptx", url: "Auto Elecrical System/starting.pptx" }
   ],
-  cad: [
-    { title: "SolidWorks Tutorial", type: "pdf", url: "notes/solidworks_tutorial.pdf" },
-    { title: "3D Modeling Guide", type: "pptx", url: "notes/3d_modeling.pptx" }
+  solidworks: [
+    { title: "SolidWorks Tutorials", type: "link", url: "https://youtu.be/20etLaFJNSc?si=ez1BcWhenrvy7Gfn" }
   ],
   transducer: [
-    { title: "Transducers & Actuators", type: "pdf", url: "notes/transducers.pdf" },
-    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" }
+    { title: "Transducers & Actuators", type: "pptx", url: "Transducers/Capacitive Transducers.ppt" },
+    { title: "Transducers & Actuators", type: "pptx", url: "Transducers/Hall effect Sensor.ppt" },
+    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
+    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
+    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
+    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
+    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
+    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
+    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" },
+    { title: "Sensor Technology", type: "pdf", url: "notes/sensors.pptx" },
+    { title: "Sensor Technology", type: "pdf", url: "notes/sensors.pptx" }
   ],
   eca: [
     { title: "Circuit Analysis", type: "pdf", url: "notes/circuit_analysis.pdf" },
@@ -183,12 +196,27 @@ function showNotesForModule(moduleId) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Enhanced Modal Functions for Mobile PDF viewing
+// ==================== UPDATED openModal FUNCTION WITH EXTERNAL LINK SUPPORT ====================
 function openModal(fileUrl, title, fileType) {
   const modal = document.getElementById("pdfModal");
   const modalTitleSpan = document.getElementById("modalTitle");
   
   modalTitleSpan.innerText = title || "Document Viewer";
+  
+  // Check if this is an external link (type 'link' or URL starting with http:// or https://)
+  const isExternalLink = fileType === 'link' || 
+                        fileUrl.startsWith('http://') || 
+                        fileUrl.startsWith('https://') ||
+                        fileUrl.includes('youtu.be') ||
+                        fileUrl.includes('youtube.com');
+  
+  // Handle External Links (YouTube, websites, etc.)
+  if (isExternalLink) {
+    showExternalContent(fileUrl, title);
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    return;
+  }
   
   // Handle PPT/PPTX files
   if (fileType === 'pptx' || fileType === 'ppt' || fileUrl.toLowerCase().includes('.pptx') || fileUrl.toLowerCase().includes('.ppt')) {
@@ -211,6 +239,61 @@ function openModal(fileUrl, title, fileType) {
   document.body.style.overflow = "hidden";
 }
 
+// New function to handle external content (YouTube, websites)
+function showExternalContent(fileUrl, title) {
+  const modalBody = document.querySelector(".modal-body");
+  
+  // Check if it's a YouTube link
+  const isYouTube = fileUrl.includes('youtube.com/watch') || fileUrl.includes('youtu.be');
+  
+  if (isYouTube) {
+    // Extract video ID for embedded player
+    let videoId = '';
+    if (fileUrl.includes('youtube.com/watch')) {
+      const urlParams = new URLSearchParams(fileUrl.split('?')[1]);
+      videoId = urlParams.get('v');
+    } else if (fileUrl.includes('youtu.be')) {
+      videoId = fileUrl.split('/').pop();
+      // Remove any additional parameters
+      videoId = videoId.split('?')[0];
+    }
+    
+    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    
+    modalBody.innerHTML = `
+      <div style="background: white; height: 100%; display: flex; flex-direction: column;">
+        <div style="flex: 1; position: relative; background: #000;">
+          <iframe 
+            src="${embedUrl}" 
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div style="padding: 0.8rem; text-align: center; background: #f5f5f5; border-top: 1px solid #ddd;">
+          <a href="${fileUrl}" target="_blank" class="btn" style="background: #0e2a3b; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-external-link-alt"></i> Open in YouTube
+          </a>
+        </div>
+      </div>
+    `;
+  } else {
+    // Regular external link (website, document link, etc.)
+    modalBody.innerHTML = `
+      <div style="padding: 2rem; background: white; height: 100%; display: flex; justify-content: center; align-items: center;">
+        <div style="text-align: center; max-width: 500px;">
+          <i class="fas fa-external-link-alt" style="font-size: 4rem; color: #d4af37; margin-bottom: 1rem;"></i>
+          <h3 style="color: #0a1a2f; margin-bottom: 1rem;">${escapeHtml(title)}</h3>
+          <p style="color: #666; margin-bottom: 2rem;">This content is available online. Click the button below to access it.</p>
+          <a href="${fileUrl}" target="_blank" class="btn" style="background: #0e2a3b; color: white; padding: 0.8rem 1.5rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-external-link-alt"></i> Open External Link
+          </a>
+        </div>
+      </div>
+    `;
+  }
+}
+
 // Show PDF in iframe (desktop)
 function showPdfInIframe(fileUrl, title) {
   const modal = document.getElementById("pdfModal");
@@ -227,9 +310,7 @@ function showPdfInIframe(fileUrl, title) {
 // Show mobile-friendly PDF options
 function showMobilePdfOptions(fileUrl, title) {
   const modalBody = document.querySelector(".modal-body");
-  const existingIframe = document.getElementById("pdfFrame");
   
-  // Create mobile-friendly viewer with multiple options
   modalBody.innerHTML = `
     <div style="padding: 1rem; background: white; height: 100%; overflow-y: auto;">
       <div style="text-align: center; padding: 2rem 1rem;">
