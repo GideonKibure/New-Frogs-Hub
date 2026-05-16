@@ -6,58 +6,99 @@ const modulesData = [
   { id: "plc", title: "Programmable Logical Controller I (PLC)", code: "ME 6215", description: "" },
   { id: "electro", title: "Electro-Pneumatic", code: "ME 6216", description: "" },
   { id: "autoElec", title: "Auto Electrical System", code: "ME 6210", description: "" },
-  { id: "cad", title: "Computer Aided Design II", code: "ME 6209", description: "" },
+  { id: "cad", title: "Solid Works", code: "ME 6209", description: "" },
   { id: "transducer", title: "Transducers and Actuator Technology", code: "ME 6217", description: "" },
   { id: "eca", title: "Electrical Circuit Analysis", code: "EE 6274", description: "" },
   { id: "ie", title: "Industrial Electronics", code: "EE 6275", description: "" },
-  { id: "math", title: "Applied Mathematics IV", code: "MS 6263", description: "" }
+  { id: "math", title: "Applied Mathematics IV", code: "MS 6263", description: "" },
+  { id: "machine", title: "Machine Element and Design", code: "MS 6212", description: "" }
 ];
 
-// Generate placeholder PDF
-function generatePlaceholderPDF(title) {
-  const pdfBase64 = 'JVBERi0xLjMKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PgplbmRvYmoKMyAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL01lZGlhQm94WzAgMCA2MTIgNzkyXS9SZXNvdXJjZXM8PC9Gb250PDwvRjEgNCAwIFI+Pj4+L0NvbnRlbnRzIDUgMCBSPj4KZW5kb2JqCjQgMCBvYmoKPDwvVHlwZS9Gb250L1N1YnR5cGUvVHlwZTEvQmFzZUZvbnQvSGVsdmV0aWNhPj4KZW5kb2JqCjUgMCBvYmoKPDwvTGVuZ3RoIDY2Pj4Kc3RyZWFtCkJUCi9GMSAxMiBUZgo3MiA3MDggVkQKKFNBTVBMRSBOT1RFOiAnKSBUagovRjEgMTIgVGYKLTIwIFZECihUaXRsZTogJykgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYNCjAwMDAwMDAwMTAgMDAwMDAgbg0KMDAwMDAwMDA1NyAwMDAwMCBuDQowMDAwMDAwMTAzIDAwMDAwIG4NCjAwMDAwMDAyMTEgMDAwMDAgbg0KMDAwMDAwMDI2OCAwMDAwMCBuDQp0cmFpbGVyCjw8L1NpemUgNi9Sb290IDEgMCBSPj4Kc3RhcnR4cmVmCjM1NQolJUVPRg==';
-  return `data:application/pdf;base64,${pdfBase64}`;
-}
+// ==================== LOCAL FILE PATHS ====================
+// UPDATE THESE PATHS to point to your actual local files
+// Place your PDF and PPT files in a folder named "notes" in the same directory as your HTML file
+// Example file structure:
+// - index.html
+// - style.css
+// - script.js
+// - notes/
+//   - fluid_mechanics.pdf
+//   - plc_basics.pptx
+//   - etc.
 
-// Notes database
-const notesDatabase = {
+const localFiles = {
   fluid: [
-    { title: "Bernoulli Equation Notes", desc: "Detailed derivation and examples with practice problems", pdfUrl: generatePlaceholderPDF("Bernoulli") },
+    { title: "Fluid Mechanics Notes", type: "pdf", url: "Fluid Mechanics/TUTORIALS-1 (Based on the Topic of Fluid Properties).pdf" },
+    { title: "Fluid Dynamics", type: "pdf", url: "notes/fluid_dynamics.pdf" }
   ],
   plc: [
-    { title: "Ladder Logic Basics", desc: "Programming fundamentals with timers and counters", pdfUrl: generatePlaceholderPDF("PLC Basics") },
+    { title: "PLC Programming Basics", type: "pdf", url: "notes/plc_basics.pdf" },
+    { title: "Advanced PLC", type: "pptx", url: "notes/advanced_plc.pptx" }
   ],
   electro: [
-    { title: "Electro-Pneumatic Circuits", desc: "Valve control design and wiring diagrams", pdfUrl: generatePlaceholderPDF("Electro-Pneumatic") },
+    { title: "Electro-Pneumatic Systems", type: "pdf", url: "notes/electro_pneumatic.pdf" },
+    { title: "Valve Control", type: "pptx", url: "notes/valve_control.pptx" }
   ],
   autoElec: [
-    { title: "Automotive Wiring Diagrams", desc: "Understanding symbols and circuit tracing", pdfUrl: generatePlaceholderPDF("Wiring") },
+    { title: "Automotive Electrical Systems", type: "pdf", url: "notes/auto_electrical.pdf" },
+    { title: "Wiring Diagrams", type: "pptx", url: "notes/wiring_diagrams.pptx" }
   ],
   cad: [
-    { title: "SolidWorks Assembly", desc: "Top-down design methodology", pdfUrl: generatePlaceholderPDF("CAD Assembly") },
+    { title: "SolidWorks Tutorial", type: "pdf", url: "notes/solidworks_tutorial.pdf" },
+    { title: "3D Modeling Guide", type: "pptx", url: "notes/3d_modeling.pptx" }
   ],
   transducer: [
-    { title: "Strain Gauges", desc: "Wheatstone bridge configurations", pdfUrl: generatePlaceholderPDF("Strain") },
+    { title: "Transducers & Actuators", type: "pdf", url: "notes/transducers.pdf" },
+    { title: "Sensor Technology", type: "pptx", url: "notes/sensors.pptx" }
   ],
   eca: [
-    { title: "Mesh & Nodal Analysis", desc: "Step-by-step problem solving guide", pdfUrl: generatePlaceholderPDF("Circuit Analysis") },
+    { title: "Circuit Analysis", type: "pdf", url: "notes/circuit_analysis.pdf" },
+    { title: "Network Theorems", type: "pptx", url: "notes/network_theorems.pptx" }
   ],
   ie: [
-    { title: "SCR & Triac", desc: "Power control applications", pdfUrl: generatePlaceholderPDF("SCR") },
+    { title: "Industrial Electronics", type: "pdf", url: "notes/industrial_electronics.pdf" },
+    { title: "Power Electronics", type: "pptx", url: "notes/power_electronics.pptx" }
   ],
   math: [
-    { title: "Laplace Transforms", desc: "Complete table and properties", pdfUrl: generatePlaceholderPDF("Laplace") },
+    { title: "Applied Mathematics IV", type: "pdf", url: "notes/applied_math.pdf" },
+    { title: "Laplace Transforms", type: "pptx", url: "notes/laplace_transforms.pptx" }
+  ],
+  machine: [
+    { title: "Machine Element Design", type: "pdf", url: "notes/machine_design.pdf" },
+    { title: "Mechanical Components", type: "pptx", url: "notes/mechanical_components.pptx" }
   ]
 };
 
-// Ensure every module has notes
+// Notes database (using local files, no descriptions)
+const notesDatabase = {};
+
+// Build notes database from localFiles
+for (let moduleId in localFiles) {
+  notesDatabase[moduleId] = localFiles[moduleId].map(file => ({
+    title: file.title,
+    desc: "", // Empty description as requested
+    type: file.type,
+    pdfUrl: file.url
+  }));
+}
+
+// Ensure every module has notes (fallback for any missing modules)
 for (let mod of modulesData) {
   if (!notesDatabase[mod.id] || notesDatabase[mod.id].length === 0) {
     notesDatabase[mod.id] = [
-      { title: `${mod.title} Essentials`, desc: `Core concepts of ${mod.code} with examples`, pdfUrl: generatePlaceholderPDF(mod.title) },
-      { title: `Advanced ${mod.title}`, desc: `Case studies and advanced problem solving`, pdfUrl: generatePlaceholderPDF(`${mod.title} Advanced`) }
+      { title: `${mod.title} Notes`, desc: "", type: "pdf", pdfUrl: `notes/${mod.id}_notes.pdf` }
     ];
   }
+}
+
+// Helper function to check if file is a PDF (for preview)
+function isPdfFile(url) {
+  return url.toLowerCase().endsWith('.pdf');
+}
+
+// Helper function to check if file is a PPT/PPTX
+function isPptFile(url) {
+  return url.toLowerCase().endsWith('.ppt') || url.toLowerCase().endsWith('.pptx');
 }
 
 // ==================== DOM ELEMENTS ====================
@@ -92,7 +133,7 @@ function renderModules(filterText = "") {
   grid.innerHTML = filtered.map(mod => `
     <div class="module-card" data-id="${mod.id}">
       <h3><i class="fas fa-book"></i> ${escapeHtml(mod.title)}</h3>
-      <p>${escapeHtml(mod.code)} — ${escapeHtml(mod.description)}</p>
+      <p>${escapeHtml(mod.code)}</p>
       <span class="gold-badge"><i class="fas fa-sticky-note"></i> Click to access notes</span>
     </div>
   `).join("");
@@ -128,10 +169,9 @@ function showNotesForModule(moduleId) {
   container.innerHTML = notesList.map((note, idx) => `
     <div class="note-card" data-noteidx="${idx}">
       <div class="note-title">${escapeHtml(note.title)}</div>
-      <div class="note-desc">${escapeHtml(note.desc)}</div>
       <div class="button-group">
-        <button class="btn btn-view" data-url="${note.pdfUrl}" data-title="${escapeHtml(note.title)}"><i class="fas fa-eye"></i> View</button>
-        <button class="btn btn-download" data-url="${note.pdfUrl}" data-filename="${moduleObj.title}_${note.title}.pdf"><i class="fas fa-download"></i> Download</button>
+        <button class="btn btn-view" data-url="${note.pdfUrl}" data-title="${escapeHtml(note.title)}" data-type="${note.type}"><i class="fas fa-eye"></i> View</button>
+        <button class="btn btn-download" data-url="${note.pdfUrl}" data-filename="${moduleObj.title}_${note.title}.${note.type}"><i class="fas fa-download"></i> Download</button>
       </div>
     </div>
   `).join("");
@@ -139,27 +179,107 @@ function showNotesForModule(moduleId) {
   document.querySelectorAll(".btn-view").forEach(btn => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      openModal(btn.getAttribute("data-url"), btn.getAttribute("data-title"));
+      const url = btn.getAttribute("data-url");
+      const title = btn.getAttribute("data-title");
+      const fileType = btn.getAttribute("data-type");
+      openModal(url, title, fileType);
     });
   });
   
   document.querySelectorAll(".btn-download").forEach(btn => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      downloadFile(btn.getAttribute("data-url"), btn.getAttribute("data-filename"));
+      const url = btn.getAttribute("data-url");
+      const filename = btn.getAttribute("data-filename");
+      downloadFile(url, filename);
     });
   });
   
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Modal Functions
-function openModal(pdfUrl, title) {
+// Modal Functions with PPT support
+function openModal(fileUrl, title, fileType) {
   const modal = document.getElementById("pdfModal");
   const iframe = document.getElementById("pdfFrame");
   const modalTitleSpan = document.getElementById("modalTitle");
-  modalTitleSpan.innerText = title || "Document Preview";
-  iframe.src = pdfUrl;
+  
+  modalTitleSpan.innerText = title || "Document Viewer";
+  
+  // For PPT/PPTX files, show a message and download instead
+  if (fileType === 'pptx' || fileType === 'ppt' || fileUrl.toLowerCase().includes('.pptx') || fileUrl.toLowerCase().includes('.ppt')) {
+    modalTitleSpan.innerText = title + " (PowerPoint File)";
+    // Display a message in the iframe for PPT files
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(`
+      <!DOCTYPE html>
+      <html>
+      <head><style>
+        body {
+          font-family: 'Inter', sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          background: linear-gradient(135deg, #0a1a2f, #07121f);
+          color: white;
+          text-align: center;
+        }
+        .message-container {
+          padding: 2rem;
+        }
+        i {
+          font-size: 4rem;
+          color: #d4af37;
+          margin-bottom: 1rem;
+        }
+        h2 {
+          margin-bottom: 1rem;
+        }
+        p {
+          margin-bottom: 1.5rem;
+          color: #b9c7d9;
+        }
+        .download-btn {
+          background: linear-gradient(135deg, #0e2a3b, #1a3a4f);
+          color: white;
+          border: 1px solid #d4af37;
+          padding: 0.8rem 1.5rem;
+          border-radius: 40px;
+          cursor: pointer;
+          font-size: 1rem;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .download-btn:hover {
+          background: linear-gradient(135deg, #1a3a4f, #2a4a62);
+        }
+      </style>
+      </head>
+      <body>
+        <div class="message-container">
+          <i class="fas fa-file-powerpoint"></i>
+          <h2>PowerPoint Presentation</h2>
+          <p>This is a PowerPoint file. Click the button below to download and view it.</p>
+          <button class="download-btn" onclick="parent.downloadFile('${fileUrl}', '${title}.pptx')">
+            <i class="fas fa-download"></i> Download PowerPoint
+          </button>
+        </div>
+      </body>
+      </html>
+    `);
+    iframeDoc.close();
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    return;
+  }
+  
+  // For PDF files, display normally
+  iframe.src = fileUrl;
   modal.style.display = "flex";
   document.body.style.overflow = "hidden";
 }
@@ -172,10 +292,16 @@ function closeModal() {
   document.body.style.overflow = "auto";
 }
 
-// Download File
+// Download File - supports both PDF and PPT
 function downloadFile(url, filename) {
+  // For local files, use fetch or direct download
   fetch(url)
-    .then(res => res.blob())
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('File not found');
+      }
+      return res.blob();
+    })
     .then(blob => {
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
@@ -186,6 +312,7 @@ function downloadFile(url, filename) {
       URL.revokeObjectURL(link.href);
     })
     .catch(() => {
+      // Fallback for local files or if fetch fails
       const a = document.createElement("a");
       a.href = url;
       a.download = filename;
@@ -194,6 +321,9 @@ function downloadFile(url, filename) {
       document.body.removeChild(a);
     });
 }
+
+// Make downloadFile available globally for the PPT modal
+window.downloadFile = downloadFile;
 
 // Navigation
 function backToHome() {
@@ -214,8 +344,7 @@ function handleSearch() {
     const query = document.getElementById("searchInput").value.toLowerCase();
     const notes = notesDatabase[currentModuleId] || [];
     const filteredNotes = notes.filter(n => 
-      n.title.toLowerCase().includes(query) || 
-      n.desc.toLowerCase().includes(query)
+      n.title.toLowerCase().includes(query)
     );
     
     const container = document.getElementById("notesGridContainer");
@@ -229,10 +358,9 @@ function handleSearch() {
     container.innerHTML = filteredNotes.map((note, idx) => `
       <div class="note-card">
         <div class="note-title">${escapeHtml(note.title)}</div>
-        <div class="note-desc">${escapeHtml(note.desc)}</div>
         <div class="button-group">
-          <button class="btn btn-view" data-url="${note.pdfUrl}" data-title="${escapeHtml(note.title)}"><i class="fas fa-eye"></i> View</button>
-          <button class="btn btn-download" data-url="${note.pdfUrl}" data-filename="${moduleObj ? moduleObj.title : 'note'}_${note.title}.pdf"><i class="fas fa-download"></i> Download</button>
+          <button class="btn btn-view" data-url="${note.pdfUrl}" data-title="${escapeHtml(note.title)}" data-type="${note.type}"><i class="fas fa-eye"></i> View</button>
+          <button class="btn btn-download" data-url="${note.pdfUrl}" data-filename="${moduleObj ? moduleObj.title : 'note'}_${note.title}.${note.type}"><i class="fas fa-download"></i> Download</button>
         </div>
       </div>
     `).join("");
@@ -240,7 +368,7 @@ function handleSearch() {
     document.querySelectorAll(".btn-view").forEach(btn => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        openModal(btn.getAttribute("data-url"), btn.getAttribute("data-title"));
+        openModal(btn.getAttribute("data-url"), btn.getAttribute("data-title"), btn.getAttribute("data-type"));
       });
     });
     document.querySelectorAll(".btn-download").forEach(btn => {
@@ -447,7 +575,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   document.getElementById("aboutLink").addEventListener("click", (e) => {
     e.preventDefault();
-    alert("2ND Year Mechanical Department Engineering Notes Portal\n\nAccess all course materials in one place.\n\nFeatures:\n• 9+ Engineering Modules\n• Search modules and notes\n• PDF viewer with download option\n• Responsive design for all devices\n• Interactive animated background\n\nDeveloped for 2nd Year Mechanical Engineering Department Students");
+    alert("2ND Year Mechanical Department Engineering Notes Portal\n\nAccess all course materials in one place.\n\nFeatures:\n• 10 Engineering Modules\n• Search modules and notes\n• PDF and PowerPoint file support\n• Responsive design for all devices\n• Interactive animated background\n\nDeveloped for 2nd Year Mechanical Engineering Department Students");
   });
   
   initParticles();
