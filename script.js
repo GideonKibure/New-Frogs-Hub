@@ -66,10 +66,27 @@ const localFiles = {
     { title: "Waiting for Notes...", type: "pdf", url: "" }
   ],
   math: [
-    { title: "Mathematics Notes - Page 1", type: "image", url: "Applied Mathematics IV/one.jpeg" },
-    { title: "Mathematics Notes - Page 2", type: "image", url: "Applied Mathematics IV/two.jpeg" },
-    { title: "Mathematics Notes - Page 3", type: "image", url: "Applied Mathematics IV/two-b.jpeg" },
-    { title: "Mathematics Notes - Page 4", type: "image", url: "Applied Mathematics IV/three.jpeg" }
+    { title: "Mathematics Notes - Page 1", type: "image", url: "Applied Mathematics IV/1.jpeg" },
+    { title: "Mathematics Notes - Page 2", type: "image", url: "Applied Mathematics IV/2.jpeg" },
+    { title: "Mathematics Notes - Page 3", type: "image", url: "Applied Mathematics IV/3.jpeg" },
+    { title: "Mathematics Notes - Page 4", type: "image", url: "Applied Mathematics IV/4.jpeg" },
+    { title: "Mathematics Notes - Page 5", type: "image", url: "Applied Mathematics IV/5.jpeg" },
+    { title: "Mathematics Notes - Page 6", type: "image", url: "Applied Mathematics IV/6.jpeg" },
+    { title: "Mathematics Notes - Page 7", type: "image", url: "Applied Mathematics IV/7.jpeg" },
+    { title: "Mathematics Notes - Page 8", type: "image", url: "Applied Mathematics IV/8.jpeg" },
+    { title: "Mathematics Notes - Page 9", type: "image", url: "Applied Mathematics IV/9.jpeg" },
+    { title: "Mathematics Notes - Page 10", type: "image", url: "Applied Mathematics IV/10.jpeg" },
+    { title: "Mathematics Notes - Page 11", type: "image", url: "Applied Mathematics IV/11.jpeg" },
+    { title: "Mathematics Notes - Page 12", type: "image", url: "Applied Mathematics IV/12.jpeg" },
+    { title: "Mathematics Notes - Page 13", type: "image", url: "Applied Mathematics IV/13.jpeg" },
+    { title: "Mathematics Notes - Page 14", type: "image", url: "Applied Mathematics IV/14.jpeg" },
+    { title: "Mathematics Notes - Page 15", type: "image", url: "Applied Mathematics IV/15.jpeg" },
+    { title: "Mathematics Notes - Page 16", type: "image", url: "Applied Mathematics IV/16.jpeg" },
+    { title: "Mathematics Notes - Page 17", type: "image", url: "Applied Mathematics IV/17.jpeg" },
+    { title: "Mathematics Notes - Page 18", type: "image", url: "Applied Mathematics IV/18.jpeg" },
+    { title: "Mathematics Notes - Page 19", type: "image", url: "Applied Mathematics IV/19.jpeg" },
+    { title: "Mathematics Notes - Page 20", type: "image", url: "Applied Mathematics IV/20.jpeg" },
+    { title: "Mathematics Notes - Page 21", type: "image", url: "Applied Mathematics IV/21.jpeg" }
   ],
   machine: [
     { title: "Lecture 1_Introduction to machine Element and Design", type: "pptx", url: "Machine Element/LECTURE 1. INTRODUCTION TO MACHINE ELEMENT AND DESIGN.pptx" },
